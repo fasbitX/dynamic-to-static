@@ -1,6 +1,6 @@
 # dynamic-to-static
 Host a Website on a Dynamic IP Network!
-Host Your Website on your own Desktop!
+Host Your Website on your own Desktop without paying for a Static IP address!
 
 You can now host your own website on your own computer, no static IP required!
 
@@ -9,6 +9,9 @@ Step #2 - Load the script on your Desktop.
 Step #3 - Set it and forget it!
 
 Details
+
+Dependencies
+(writen for Ubunut 18.04)
 
 Cloudflare API 
 
