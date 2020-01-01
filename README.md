@@ -1,5 +1,6 @@
 # StaticMaker
 Host a Website on a Dynamic IP Network!
+
 Host Your Website on your own Desktop without paying for a Static IP address!
 
 You can now host your own website on your own computer or office computer, no static IP required!
