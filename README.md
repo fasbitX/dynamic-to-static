@@ -21,4 +21,4 @@ Currently the script only uses email to send updates if the IP changes, but by l
 
 User Interface
 
-
+m
