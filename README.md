@@ -1,4 +1,4 @@
-# dynamic-to-static
+# StaticMaker
 Host a Website on a Dynamic IP Network!
 Host Your Website on your own Desktop without paying for a Static IP address!
 
