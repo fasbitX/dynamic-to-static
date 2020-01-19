@@ -1,0 +1,59 @@
+{
+  "site_url": "http://localhost/ipchanger/public/",
+  "site_port": "80",
+  "db": {
+    "driver": "Mysqli",
+    "hostname": "localhost",
+    "database": "ipchanger",
+    "username": "root",
+    "password": "",
+    "charset": "utf8"
+  },
+  "cloudflare": {
+    "email": "",
+    "api_key": "",
+    "zone_id": "",
+    "records": [
+      {
+        "record_type": "A",
+        "record_name": "example.com",
+        "proxied": true,
+        "update_ipv6": true
+      },
+      {
+        "record_type": "A",
+        "record_name": "www.example.com",
+        "proxied": true,
+        "update_ipv6": true
+      },
+      {
+        "record_type": "",
+        "record_name": "",
+        "proxied": false,
+        "update_ipv6": false
+      },
+      {
+        "record_type": "",
+        "record_name": "",
+        "proxied": false,
+        "update_ipv6": false
+      },
+      {
+        "record_type": "",
+        "record_name": "",
+        "proxied": false,
+        "update_ipv6": false
+      }
+    ]
+  },
+  "notifications": {
+    "send_email": 0,
+    "host": "mail.example.com",
+    "from_email": "test@example.com",
+    "from_password": "xxxxxx",
+    "from_name": "Cron Mailer",
+    "to_email": "to@example.com",
+    "to_name": "Receiver Name",
+    "port": "587"
+  }
+}

@@ -18,8 +18,6 @@ The script runs as a daemon in the background and needs very little if any adjus
 Proxy Services
     • If you know of other free proxy services with API access, shoot us an email and we will add them to the option list.
 
-Access the Administrative GUI at  https://127.0.0.1:10005
-
 Current Program built for Ubuntu 18.04
 
 Windows installer: coming soon.
@@ -31,3 +29,26 @@ Installation
 
 
 Run
+
+
+## INSTALLATION
+
+- Create database by importing ipchanger.sql file into your MySQL.
+
+- Copy public/config-sample.json to public/config.json and add required credentials.
+
+- Run following command to install required packages.
+
+```
+    composer install
+```
+
+## GUI Access
+
+Access the Administrative GUI at  https://127.0.0.1/StaticMaker/public
+
+## COMMAND EXAMPLE
+
+```
+/usr/bin/php /path/to/your/package/script.php
+```
