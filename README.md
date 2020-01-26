@@ -18,7 +18,7 @@ The script runs as a daemon in the background and needs very little if any adjus
 Proxy Services
     • If you know of other free proxy services with API access, shoot us an email and we will add them to the option list.
 
-Current Program built for Ubuntu 18.04
+Current Program built for Ubuntu 18.04, with easy to use front end web GUI.
 
 Windows installer: coming soon.
 
