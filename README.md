@@ -15,21 +15,17 @@ The script runs as a daemon in the background and needs very little if any adjus
     • You need 1 instance of StaticMaker per Cloudflare account.
     • Manage multiple Domains & Sub-Domains from the same Cloudflare account
 
+Step 3 
+Install Mysql and a web server like Apache2 or Nginx.  
+
 Proxy Services
-    • If you know of other free proxy services with API access, shoot us an email and we will add them to the option list.
+    • If you know of other free proxy services with API access, shoot us an email and we may add them to the option list.
 
 Current Program built for Ubuntu 18.04, with easy to use front end web GUI.
 
 Windows installer: coming soon.
 
 Dependencies
-
-
-Installation
-
-
-Run
-
 
 ## INSTALLATION
 
@@ -52,6 +48,5 @@ Access the Administrative GUI at  https://127.0.0.1/StaticMaker/public
 ```
 /usr/bin/php /path/to/your/package/script.php
 ```
-
 
 info@fasbit.com
