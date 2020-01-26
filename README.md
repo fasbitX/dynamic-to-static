@@ -8,7 +8,7 @@ Set up a free account with Cloudflare.
 Cloudlfare is a proxy service that allows you to re-direct web traffic with the use of their API. 
 
 Step 2
-Install the script on the computer that will be hosting the website.
+Install the StaticMaker script on the computer that will be hosting the website.
 If your local ISP changes your IP address, the script will detect the change and send a code to Cloudlfare to change the destination IP address from the old IP address to the new one.
 The script runs as a daemon in the background and needs very little if any adjusting.
 
