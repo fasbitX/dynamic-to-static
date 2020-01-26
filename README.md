@@ -52,3 +52,6 @@ Access the Administrative GUI at  https://127.0.0.1/StaticMaker/public
 ```
 /usr/bin/php /path/to/your/package/script.php
 ```
+
+
+info@fasbit.com
