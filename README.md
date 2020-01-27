@@ -35,7 +35,7 @@ Run
 
 - Create database by importing ipchanger.sql file into your MySQL.
 
-- Copy public/config-sample.json to public/config.json and add required credentials.
+- Copy public/config-sample.php to public/config.php and update db credentials.
 
 - Run following command to install required packages.
 

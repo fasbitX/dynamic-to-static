@@ -2,7 +2,7 @@
 
 define('BASE_PATH', dirname(__FILE__));
 
-require BASE_PATH . '/_helper.php';
+require BASE_PATH . '/bootstrap.php';
 
 $error = 1;
 $msg = "Bad Request.";
