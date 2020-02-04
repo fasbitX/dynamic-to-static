@@ -30,12 +30,14 @@ include_once BASE_PATH . '/includes/header.php';
                                     $counter = 0;
                                     foreach ($dns_records as $dns_record):
                                         $counter++;
-                                        $dns_record_id = $dns_record->dns_record_id;
+                                        $record_id = "record_id-{$counter}";
                                         $record_type = "record_type-{$counter}";
                                         $record_name = "record_name-{$counter}";
                                         $record_proxied = "record_proxied-{$counter}";
                                         ?>
                                         <div class="row pt-1 pb-1">
+                                            <input type="hidden" name="<?php echo $record_id; ?>"
+                                                   value="<?php echo $dns_record->dns_record_id ?>">
                                             <div class="col-md-2">
                                                 <select id="<?php echo $record_type ?>"
                                                         name="<?php echo $record_type ?>" class="form-control">
@@ -71,7 +73,7 @@ include_once BASE_PATH . '/includes/header.php';
                                             </div>
                                             <div class="col-md-1 text-right">
                                                 <button type="button" class="btn btn-danger btn-sm"
-                                                        onclick="deleteRecord(this, 'delete_record-<?php echo $dns_record_id ?>');">
+                                                        onclick="deleteRecord(this, 'delete_record-<?php echo $dns_record->dns_record_id ?>');">
                                                     <i
                                                             class="fa fa-trash"></i>
                                                 </button>

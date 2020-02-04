@@ -29,10 +29,11 @@ if (!empty($_POST)) {
             $delete_records = [];
             // get records to save or delete
             foreach ($_POST as $key => $value) {
-                if (strpos($key, 'record_') !== false) {
+                if (strpos($key, 'record_') === 0) {
+                    var_dump($key);
                     $key_parts = explode('-', $key);
                     $records[$key_parts[1]][$key_parts[0]] = $value;
-                } elseif (strpos($key, 'delete_record-') !== false) {
+                } elseif (strpos($key, 'delete_record-') === 0) {
                     $key_parts = explode('-', $key);
                     $delete_records[] = $key_parts[1];
                 }
@@ -40,10 +41,12 @@ if (!empty($_POST)) {
 
             // save records
             foreach ($records as $record) {
+                $record_id = isset($record['record_id']) ? $record['record_id'] : '';
                 $record_type = isset($record['record_type']) ? $record['record_type'] : '';
                 $record_name = isset($record['record_name']) ? $record['record_name'] : '';
                 $record_proxied = isset($record['record_proxied']) ? (int)$record['record_proxied'] : 0;
                 $data = [
+                    'dns_record_id' => $record_id,
                     'record_type' => $record_type,
                     'record_name' => $record_name,
                     'record_value' => $record_type === 'AAAA' ? $ip_6 : $ip_4,
@@ -77,7 +80,8 @@ if (!empty($_POST)) {
     }
 }
 
+$url = $_SERVER['HTTP_REFERER'] ?? './';
 $config = $db->getConfig();
 $_SESSION['submission_error'] = $error;
 $_SESSION['submission_message'] = $msg;
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+header('Location: ' . $url);

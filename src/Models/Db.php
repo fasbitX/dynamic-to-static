@@ -43,22 +43,23 @@ class Db
     public function addRecord($record)
     {
         $dns_record_id = null;
-        $dns_record = $this->db::table('dns_records')->where([
-            'record_type' => $record['record_type'],
-            'record_name' => $record['record_name'],
-        ])->get();
-        if ($dns_record->count()) {
-            $record['date_updated'] = date('Y-m-d H:i:s');
-            $dns_record_id = $dns_record->first()->dns_record_id;
-        } else {
-            $record['date_created'] = date('Y-m-d H:i:s');
+        if (!empty($record['dns_record_id'])) {
+            $dns_record = $this->db::table('dns_records')->where([
+                'dns_record_id' => $record['dns_record_id'],
+            ])->get();
+            if ($dns_record->count()) $dns_record_id = $dns_record->first()->dns_record_id;
         }
 
-        $success = $this->db::table('dns_records')
-            ->updateOrInsert(
-                ['dns_record_id' => $dns_record_id],
-                $record
-            );
+        if (!empty($dns_record_id)) {
+            $record['date_updated'] = date('Y-m-d H:i:s');
+            $success = $this->db::table('dns_records')
+                ->where(['dns_record_id' => $dns_record_id])
+                ->update($record);
+        } else {
+            $record['date_created'] = date('Y-m-d H:i:s');
+            $success = $this->db::table('dns_records')
+                ->insert($record);
+        }
 
         return $success;
     }
