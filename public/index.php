@@ -176,6 +176,7 @@ include_once BASE_PATH . '/includes/header.php';
                             </div>
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9">
+                                <input type="hidden" name="action" value="config">
                                 <button type="submit" class="btn btn-primary mb-2">Save</button>
                             </div>
                         </div>

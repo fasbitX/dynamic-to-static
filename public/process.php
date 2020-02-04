@@ -1,91 +1,83 @@
 <?php
 
-define('BASE_PATH', dirname(__FILE__));
+require dirname(__FILE__) . '/bootstrap.php';
 
-require BASE_PATH . '/bootstrap.php';
+use App\Util\Helper;
 
-$error = 1;
-$msg = "Bad Request.";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$error = 0;
+$msg = "";
 
 if (!empty($_POST)) {
 
-    $old_config = getConfig();
-    $config = [
-        'site_url' => getPostValue('site_url'),
-        'site_port' => getPostValue('site_port'),
-        'db' => [
-            'driver' => getPostValue('db-driver'),
-            'hostname' => getPostValue('db-hostname'),
-            'database' => getPostValue('db-database'),
-            'username' => getPostValue('db-username'),
-            'password' => getPostValue('db-password') == '' ? $old_config->db->password : getPostValue('db-password'),
-            'charset' => 'utf8',
-        ],
-        'cloudflare' => [
-            'email' => getPostValue('cloudflare-email'),
-            'api_key' => getPostValue('cloudflare-api_key'), // global api key
-            'zone_id' => getPostValue('cloudflare-zone_id'),
-            'records' => [
-                [
-                    'record_type' => getPostValue('record_type-0'),
-                    'record_name' => getPostValue('record_name-0'),
-                    'proxied' => in_array(getPostValue('proxied-0'), ['on', 1]) ? true : false,
-                    'update_ipv6' => in_array(getPostValue('update_ipv6-0'), ['on', 1]) ? true : false,
-                ],
-                [
-                    'record_type' => getPostValue('record_type-1'),
-                    'record_name' => getPostValue('record_name-1'),
-                    'proxied' => in_array(getPostValue('proxied-1'), ['on', 1]) ? true : false,
-                    'update_ipv6' => in_array(getPostValue('update_ipv6-1'), ['on', 1]) ? true : false,
-                ],
-                [
-                    'record_type' => getPostValue('record_type-2'),
-                    'record_name' => getPostValue('record_name-2'),
-                    'proxied' => in_array(getPostValue('proxied-2'), ['on', 1]) ? true : false,
-                    'update_ipv6' => in_array(getPostValue('update_ipv6-2'), ['on', 1]) ? true : false,
-                ],
-                [
-                    'record_type' => getPostValue('record_type-3'),
-                    'record_name' => getPostValue('record_name-3'),
-                    'proxied' => in_array(getPostValue('proxied-3'), ['on', 1]) ? true : false,
-                    'update_ipv6' => in_array(getPostValue('update_ipv6-3'), ['on', 1]) ? true : false,
-                ],
-                [
-                    'record_type' => getPostValue('record_type-4'),
-                    'record_name' => getPostValue('record_name-4'),
-                    'proxied' => in_array(getPostValue('proxied-4'), ['on', 1]) ? true : false,
-                    'update_ipv6' => in_array(getPostValue('update_ipv6-4'), ['on', 1]) ? true : false,
-                ],
-            ],
-        ],
-        'notifications' => [
-            'send_email' => in_array(getPostValue('notifications-send_email'), ['on', 1]) ? 1 : 0,
-            'host' => getPostValue('notifications-host'),
-            'from_email' => getPostValue('notifications-from_email'),
-            'from_password' => getPostValue('notifications-from_password'),
-            'from_name' => getPostValue('notifications-from_name'),
-            'to_email' => getPostValue('notifications-to_email'),
-            'to_name' => getPostValue('notifications-to_name'),
-            'port' => getPostValue('notifications-port'),
-        ]
-    ];
+    $action = Helper::getPostValue('action');
+    $ip_4 = trim(file_get_contents('https://ipv4.icanhazip.com/'));
+    $ip_6 = trim(file_get_contents('https://api6.ipify.org/'));
+    if (strcmp($ip_4, $ip_6) === 0) $ip_6 = '';
 
+    switch ($action) {
+        case 'config':
+            print_r($_POST);
+            exit;
+            break;
 
-    $fp = fopen(dirname(__FILE__) . '/config.json', 'w+');
-    $response = fwrite($fp, json_encode($config));
-    fclose($fp);
+        case 'dns-records':
 
-    if ($response === false) {
-        $error = 1;
-        $msg = 'Could not save config.';
-    } else {
-        $error = 0;
-        $msg = 'Successfully saved.';
+            $records = [];
+            $delete_records = [];
+            // get records to save or delete
+            foreach ($_POST as $key => $value) {
+                if (strpos($key, 'record_') !== false) {
+                    $key_parts = explode('-', $key);
+                    $records[$key_parts[1]][$key_parts[0]] = $value;
+                } elseif (strpos($key, 'delete_record-') !== false) {
+                    $key_parts = explode('-', $key);
+                    $delete_records[] = $key_parts[1];
+                }
+            }
+
+            // save records
+            foreach ($records as $record) {
+                $record_type = isset($record['record_type']) ? $record['record_type'] : '';
+                $record_name = isset($record['record_name']) ? $record['record_name'] : '';
+                $record_proxied = isset($record['record_proxied']) ? (int)$record['record_proxied'] : 0;
+                $data = [
+                    'record_type' => $record_type,
+                    'record_name' => $record_name,
+                    'record_value' => $record_type === 'AAAA' ? $ip_6 : $ip_4,
+                    'is_proxied' => $record_proxied,
+                ];
+                $success = $db->addRecord($data);
+                if (!$success) {
+                    $error = 1;
+                    $msg .= "Couldn't insert `{$record_type}` Record for `{$record_name}`";
+                }
+            }
+
+            // delete records
+            foreach ($delete_records as $delete_record) {
+                $success = $db->deleteRecord($delete_record);
+                if (!$success) {
+                    $error = 1;
+                    $msg .= "Couldn't delete dns_record_id={$delete_record}";
+                }
+            }
+
+            //echo '<pre>', print_r($records, true), '</pre>';
+            if (!$error) $msg = 'Successfully added.';
+
+            break;
+
+        default:
+            $error = 1;
+            $msg = "Bad Request";
+            break;
     }
-    $old_config = null;
 }
 
-$config = getConfig();
+$config = $db->getConfig();
 $_SESSION['submission_error'] = $error;
 $_SESSION['submission_message'] = $msg;
-header('Location: ' . getUrlWithPort($config->site_url, $config->site_port));
+header('Location: ' . $_SERVER['HTTP_REFERER']);
