@@ -81,6 +81,7 @@ class Db
                 ->update($record);
         } else {
             $record['date_created'] = date('Y-m-d H:i:s');
+            unset($record['dns_record_id']);
             $success = $this->db::table('dns_records')
                 ->insert($record);
         }
@@ -93,7 +94,7 @@ class Db
      */
     public function getDnsRecords()
     {
-        $dns_records = $this->db::table('dns_records')->get()->all();
+        $dns_records = $this->db::table('dns_records')->get()->toArray();
         return $dns_records;
     }
 
@@ -106,5 +107,44 @@ class Db
         $success = false;
         if (!empty($delete_record_id)) $success = $this->db::table('dns_records')->where(['dns_record_id' => $delete_record_id])->delete();
         return $success;
+    }
+
+    public function getCurrentIp($type = 'IPv4')
+    {
+        $ips = $this->db::table('ips')->where([
+            'status' => 1,
+            'type' => $type,
+        ])->get();
+        $ip = '';
+        if($ips->count()) $ip = $ips->first()->ip;
+        return $ip;
+    }
+
+    public function disableIp($type = 'IPv4')
+    {
+        $success = $this->db::table('ips')
+            ->where(['type' => $type])
+            ->update([
+                'status' => 0,
+            ]);
+        return $success;
+    }
+
+    public function addIp($ip, $type)
+    {
+        $success = $this->db::table('ips')
+            ->insert([
+                'ip' => $ip,
+                'type' => $type,
+                'status' => 1,
+                'date_created' => date('Y-m-d H:i:s'),
+            ]);
+        return $success;
+    }
+
+    public function getIps()
+    {
+        $ips = $this->db::table('ips')->orderBy('id', 'desc')->get()->toArray();
+        return $ips;
     }
 }

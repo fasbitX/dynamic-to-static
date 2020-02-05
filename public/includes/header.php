@@ -36,6 +36,9 @@
             <li class="nav-item<?php echo $page_title === 'DNS Records' ? ' active':'' ?>">
                 <a class="nav-link" href="<?php \App\Util\Helper::url('dns-records.php') ?>">DNS Records</a>
             </li>
+            <li class="nav-item<?php echo $page_title === 'IPs Log' ? ' active':'' ?>">
+                <a class="nav-link" href="<?php \App\Util\Helper::url('ips.php') ?>">IPs Log</a>
+            </li>
         </ul>
     </div>
 </nav>
