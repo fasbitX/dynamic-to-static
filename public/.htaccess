@@ -1,3 +1,0 @@
-<FilesMatch "config\.json|config-sample\.json">
-        Require all denied
-</FilesMatch>

@@ -1,116 +1,133 @@
 <?php
 
 require 'vendor/autoload.php';
+// set base path
+define('BASE_PATH', dirname(__FILE__));
 
-$filename = dirname(__FILE__) . '/public/config.json';
-$handle = fopen($filename, "r");
-$contents = fread($handle, filesize($filename));
-fclose($handle);
-$config = json_decode($contents);
-$client = new GuzzleHttp\Client();
-$response = $client->request('GET', 'http://httpbin.org/ip');
-if ($response->getStatusCode() !== 200) throw new \Exception('Could not pull contents from IP checker.');
-
-// get current ip (ipv4)
-$ip_data = json_decode($response->getBody());
-$ips = explode(',', $ip_data->origin);
-$ip = isset($ips[0]) ? trim($ips[0]) : '';
-
-// get ipv6
-$ipv6 = $ip;
-$response = $client->request('GET', 'https://api6.ipify.org/');
-if ($response->getStatusCode() === 200) {
-    $ipv6 = (string)$response->getBody();
-}
+// load app config
+if (!is_file(BASE_PATH . '/public/config.php')) die('No configuration file found. Please read documentation.');
+$app_config = include_once BASE_PATH . '/public/config.php';
 
 $config_db = [
-    'driver' => $config->db->driver,
-    'hostname' => $config->db->hostname,
-    'database' => $config->db->database,
-    'username' => $config->db->username,
-    'password' => $config->db->password,
+    'driver' => 'mysql',
+    'host' => $app_config['db']['hostname'],
+    'database' => $app_config['db']['database'],
+    'username' => $app_config['db']['username'],
+    'password' => $app_config['db']['password'],
     'charset' => 'utf8',
 ];
 
 // connect to db
-$adapter = new Zend\Db\Adapter\Adapter($config_db);
+try {
+    $db = new \App\Models\Db($config_db);
+} catch (\Exception $e) {
+    die('DB connection error.');
+}
+$config = $db->getConfig();
+$ipv4 = trim(file_get_contents('https://ipv4.icanhazip.com/'));
+$ipv6 = trim(file_get_contents('https://api6.ipify.org/'));
+if (strcmp($ipv4, $ipv6) === 0) $ipv6 = '';
+
 
 // check if currently selected ip is same
-$sql = new Zend\Db\Sql\Sql($adapter);
-$select = $sql->select('ips');
-$select->where('status', 1);
-$select->order('id DESC');
-$select->limit(1);
+$current_ipv4 = $db->getCurrentIp('IPv4');
+$current_ipv6 = $db->getCurrentIp('IPv6');
 
-$selectString = $sql->buildSqlString($select);
-$results = $adapter->query($selectString, $adapter::QUERY_MODE_EXECUTE);
-$count = $results->count();
-$latest_ip = $results->count() ? $results->current() : null;
+// Insert IPv4
+if (empty($current_ipv4) || strcmp($current_ipv4, $ipv4) !== 0) {
+    // update ip records
+    updateIpv4Records($config, $db, $ipv4);
+    // send email with new ip information
+    sendEmail($config, $current_ipv4, $ipv4);
+}
 
-// Insert IP into db if it's not the same as current one
-if (empty($latest_ip) || strcmp($latest_ip->ip, $ip) !== 0) {
+// Insert IPv6
+if ((!empty($ipv6) && empty($current_ipv6)) || strcmp($current_ipv6, $ipv6) !== 0) {
+    // update ip records
+    updateIpv6Records($config, $db, $ipv6);
+    // send email with new ip information
+    sendEmail($config, $current_ipv6, $ipv6);
+}
 
+function updateIpv4Records(object $config,  App\Models\Db $db, $ipv4)
+{
     // change any other ip status to 0
-    $update = $sql->update('ips');
-    $update->set(array(
-        'status' => 0,
-    ));
-    $query = $sql->buildSqlString($update);
-    $results = $adapter->query($query, $adapter::QUERY_MODE_EXECUTE);
-
-    // insert new ip with status 1
-    $insert = $sql->insert('ips');
-    $insert->values(array(
-        'ip' => $ip,
-        'status' => 1,
-        'date_created' => new Zend\Db\Sql\Expression('NOW()'),
-    ));
-    $query = $sql->buildSqlString($insert);
-    $results = $adapter->query($query, $adapter::QUERY_MODE_EXECUTE);
+    $db->disableIp('IPv4');
+    $db->addIp($ipv4, 'IPv4');
 
     // update cloudflare records
-    $key = new Cloudflare\API\Auth\APIKey($config->cloudflare->email, $config->cloudflare->api_key);
+    $key = new Cloudflare\API\Auth\APIKey($config->cloudflare_email, $config->cloudflare_api_key);
     $adapter = new Cloudflare\API\Adapter\Guzzle($key);
     $dns = new Cloudflare\API\Endpoints\DNS($adapter);
 
     // update dns records
-    foreach ($config->cloudflare->records as $cloudflare_record) {
-        if (empty($cloudflare_record->record_type)) continue;
-        $zone_id = $config->cloudflare->zone_id; // zone id
-        $record_type = $cloudflare_record->record_type; // type of your record
-        $record_name = $cloudflare_record->record_name; // you could add www.your-domain.com or your-domain.com for your A record
-        $proxied = (bool)$cloudflare_record->proxied; // whether you want cloudflare proxy or not
-        $record_value = $ip; // your ip
-        $record_id = $dns->getRecordID($zone_id, $record_type, $record_name);
-        if (!empty($record_id)) {
-            $details = array(
-                'type' => $record_type,
-                'name' => $record_name,
-                'content' => $record_value,
-                'proxied' => $proxied,
-            );
-            $dns->updateRecordDetails($zone_id, $record_id, $details);
-        }
+    $records = $db->getDnsRecords();
+    foreach ($records as $record) {
+        if (empty($record->record_type)) continue;
+        $zone_id = $config->cloudflare_zone_id; // zone id
+        $record_type = $record->record_type; // type of your record
+        $record_name = $record->record_name; // you could add www.your-domain.com or your-domain.com for your A record
+        $proxied = (bool)$record->is_proxied; // whether you want cloudflare proxy or not
+        if ($record_type == 'AAAA') continue; // skip ivp6 records
 
-        // update ipv6
-        // only works with A records
-        if (strcmp($ip, $ipv6) !== 0 && $record_type == 'A' && !empty($cloudflare_record->update_ipv6)) {
-            $record_type = 'AAAA';
-            $record_value = $ipv6;
-            $record_id = $dns->getRecordID($zone_id, $record_type, $record_name);
-            if (!empty($record_id)) {
-                $details = array(
-                    'type' => $record_type,
-                    'name' => $record_name,
-                    'content' => $record_value,
-                    'proxied' => $proxied,
-                );
-                $dns->updateRecordDetails($zone_id, $record_id, $details);
-            }
+        $record_value = $ipv4; // your ip
+        $record_id = $dns->getRecordID($zone_id, $record_type, $record_name);
+        $details = array(
+            'type' => $record_type,
+            'name' => $record_name,
+            'content' => $record_value,
+            'proxied' => $proxied,
+        );
+
+        if (!empty($record_id)) {
+            $dns->updateRecordDetails($zone_id, $record_id, $details);
+        } else {
+            $dns->addRecord($zone_id, $record_type, $record_name, $record_value, 0, $proxied);
         }
     }
+}
 
-    // send email with new ip information
+function updateIpv6Records(object $config,  App\Models\Db $db, $ipv6)
+{
+    // change any other ip status to 0
+    $db->disableIp('IPv6');
+    $db->addIp($ipv6, 'IPv6');
+
+    // update cloudflare records
+    $key = new Cloudflare\API\Auth\APIKey($config->cloudflare_email, $config->cloudflare_api_key);
+    $adapter = new Cloudflare\API\Adapter\Guzzle($key);
+    $dns = new Cloudflare\API\Endpoints\DNS($adapter);
+
+    // update ipv6
+    // update dns records
+    $records = $db->getDnsRecords();
+    foreach ($records as $record) {
+        if (empty($record->record_type)) continue;
+        $zone_id = $config->cloudflare_zone_id; // zone id
+        $record_type = $record->record_type; // type of your record
+        $record_name = $record->record_name; // you could add www.your-domain.com or your-domain.com for your A record
+        $proxied = (bool)$record->is_proxied; // whether you want cloudflare proxy or not
+        if ($record_type != 'AAAA') continue; // skip ivp4 records
+
+        $record_value = $ipv6;
+        $record_id = $dns->getRecordID($zone_id, $record_type, $record_name);
+        $details = array(
+            'type' => $record_type,
+            'name' => $record_name,
+            'content' => $record_value,
+            'proxied' => $proxied,
+        );
+
+        if (!empty($record_id)) {
+            $dns->updateRecordDetails($zone_id, $record_id, $details);
+        } else {
+            $dns->addRecord($zone_id, $record_type, $record_name, $record_value, 0, $proxied);
+        }
+    }
+}
+
+function sendEmail($config, $old_ip, $new_ip)
+{
     // Instantiation and passing `true` enables exceptions
     if (!empty($config->notifications->send_email)) {
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -141,8 +158,8 @@ if (empty($latest_ip) || strcmp($latest_ip->ip, $ip) !== 0) {
             // Content
             $mail->isHTML(true);                                  // Set email format to HTML
             $mail->Subject = 'Your IP has changed.';
-            $old_ip = isset($latest_ip->ip) ? $latest_ip->ip : '';
-            $mail->Body = "We've just detected that your IP has changed. Here is your new IP: {$ip}";
+
+            $mail->Body = "We've just detected that your IP has changed. Here is your new IP: {$new_ip}";
             if (!empty($old_ip)) $mail->Body .= "<br><br>Your old IP was {$old_ip}";
             $mail->send();
 
