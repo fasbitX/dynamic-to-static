@@ -33,7 +33,7 @@ Run
 
 ## INSTALLATION
 
-- Create database by importing ipchanger.sql file into your MySQL.
+- Create database by importing db.sql file into your MySQL.
 
 - Copy public/config-sample.php to public/config.php and update db credentials.
 
