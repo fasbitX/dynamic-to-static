@@ -29,11 +29,35 @@ class Db
         $settings = [];
         if ($configurations->count()) {
             foreach ($configurations as $config) {
-                $settings[$config->setting_key] = $config->setting_value;
+                $settings[$config->config_key] = $config->config_value;
             }
         }
 
         return (object)$settings;
+    }
+
+    /**
+     * @param $config_key
+     * @param $config_value
+     * @return bool|int
+     */
+    public function updateConfig($config_key, $config_value)
+    {
+        $configurations = $this->db::table('configurations')->where(['config_key' => $config_key])->get();
+
+        $success = false;
+        if ($configurations->count()) {
+            $config_id = $configurations->first()->config_id;
+            $success = $this->db::table('configurations')
+                ->where(['config_id' => $config_id])
+                ->update([
+                    'config_key' => $config_key,
+                    'config_value' => $config_value,
+                    'date_updated' => date('Y-m-d H:i:s'),
+                ]);
+        }
+
+        return $success;
     }
 
     /**

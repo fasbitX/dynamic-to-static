@@ -19,8 +19,44 @@ if (!empty($_POST)) {
 
     switch ($action) {
         case 'config':
-            print_r($_POST);
-            exit;
+
+            $site_name = Helper::getPostValue('site_name');
+            $site_url = Helper::getPostValue('site_url');
+            $site_port = Helper::getPostValue('site_port');
+
+            if (empty($site_name) || empty($site_url) || empty($site_port)) {
+                $error = 1;
+                $msg .= "Site Title, URL or Port cannot be empty.";
+                break;
+            }
+
+            $config_settings = [
+                'site_name' => Helper::getPostValue('site_name'),
+                'site_url' => Helper::getPostValue('site_url'),
+                'site_port' => Helper::getPostValue('site_port'),
+                'cloudflare_email' => Helper::getPostValue('cloudflare_email'),
+                'cloudflare_api_key' => Helper::getPostValue('cloudflare_api_key'), // global api key
+                'cloudflare_zone_id' => Helper::getPostValue('cloudflare_zone_id'),
+                'notification_send_email' => in_array(Helper::getPostValue('notification_send_email'), ['on', 1]) ? 1 : 0,
+                'notification_host' => Helper::getPostValue('notification_host'),
+                'notification_from_email' => Helper::getPostValue('notification_from_email'),
+                'notification_from_password' => Helper::getPostValue('notification_from_password'),
+                'notification_from_name' => Helper::getPostValue('notification_from_name'),
+                'notification_to_email' => Helper::getPostValue('notification_to_email'),
+                'notification_to_name' => Helper::getPostValue('notification_to_name'),
+                'notification_port' => Helper::getPostValue('notification_port'),
+            ];
+
+            foreach ($config_settings as $config_key => $config_setting) {
+                $success = $db->updateConfig($config_key, $config_setting);
+                if (!$success) {
+                    $error = 1;
+                    $msg .= "Couldn't update config for `{$config_key}`<br>";
+                }
+            }
+
+            if (!$error) $msg = 'Successfully updated.';
+
             break;
 
         case 'dns-records':
@@ -30,7 +66,6 @@ if (!empty($_POST)) {
             // get records to save or delete
             foreach ($_POST as $key => $value) {
                 if (strpos($key, 'record_') === 0) {
-                    var_dump($key);
                     $key_parts = explode('-', $key);
                     $records[$key_parts[1]][$key_parts[0]] = $value;
                 } elseif (strpos($key, 'delete_record-') === 0) {
@@ -55,7 +90,7 @@ if (!empty($_POST)) {
                 $success = $db->addRecord($data);
                 if (!$success) {
                     $error = 1;
-                    $msg .= "Couldn't insert `{$record_type}` Record for `{$record_name}`";
+                    $msg .= "Couldn't insert `{$record_type}` Record for `{$record_name}`<br>";
                 }
             }
 
@@ -64,7 +99,7 @@ if (!empty($_POST)) {
                 $success = $db->deleteRecord($delete_record);
                 if (!$success) {
                     $error = 1;
-                    $msg .= "Couldn't delete dns_record_id={$delete_record}";
+                    $msg .= "Couldn't delete dns_record_id={$delete_record}<br>";
                 }
             }
 
