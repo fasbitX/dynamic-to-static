@@ -129,17 +129,17 @@ function updateIpv6Records(object $config,  App\Models\Db $db, $ipv6)
 function sendEmail($config, $old_ip, $new_ip)
 {
     // Instantiation and passing `true` enables exceptions
-    if (!empty($config->notifications->send_email)) {
+    if (!empty($config->notifications_send_email)) {
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
         try {
 
-            $mail_host = $config->notifications->host;
-            $from_email = $config->notifications->from_email;
-            $from_password = $config->notifications->from_password;
-            $from_name = $config->notifications->from_name;
-            $to_email = $config->notifications->to_email;
-            $to_name = $config->notifications->to_name;
-            $port = $config->notifications->port;
+            $mail_host = $config->notifications_host;
+            $from_email = $config->notifications_from_email;
+            $from_password = $config->notifications_from_password;
+            $from_name = $config->notifications_from_name;
+            $to_email = $config->notifications_to_email;
+            $to_name = $config->notifications_to_name;
+            $port = $config->notifications_port;
 
             //Server settings
             //$mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;                      // Enable verbose debug output
