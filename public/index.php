@@ -2,7 +2,7 @@
 require_once dirname(__FILE__) . '/bootstrap.php';
 
 $page_title = 'Configurations';
-$ip_4 = trim(file_get_contents('https://ipv4.icanhazip.com/'));
+$ip_4 = trim(file_get_contents('https://api.ipify.org/'));
 $ip_6 = trim(file_get_contents('https://api6.ipify.org/'));
 if (strcmp($ip_4, $ip_6) === 0) $ip_6 = '';
 

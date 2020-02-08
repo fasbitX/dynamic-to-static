@@ -24,7 +24,7 @@ try {
     die('DB connection error.');
 }
 $config = $db->getConfig();
-$ipv4 = trim(file_get_contents('https://ipv4.icanhazip.com/'));
+$ipv4 = trim(file_get_contents('https://api.ipify.org/'));
 $ipv6 = trim(file_get_contents('https://api6.ipify.org/'));
 if (strcmp($ipv4, $ipv6) === 0) $ipv6 = '';
 
