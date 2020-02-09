@@ -12,7 +12,7 @@ $current_ipv4 = $db->getCurrentIp('IPv4');
 $current_ipv6 = $db->getCurrentIp('IPv6');
 
 // Insert IPv4
-if ((!empty($ipv4) && empty($current_ipv4)) || strcmp($current_ipv4, $ipv4) !== 0) {
+if (!empty($ipv4) && (empty($current_ipv4) || strcmp($current_ipv4, $ipv4) !== 0)) {
     // update ip records
     updateIpv4Records($config, $db, $ipv4);
     // send email with new ip information
@@ -20,7 +20,7 @@ if ((!empty($ipv4) && empty($current_ipv4)) || strcmp($current_ipv4, $ipv4) !== 
 }
 
 // Insert IPv6
-if ((!empty($ipv6) && empty($current_ipv6)) || strcmp($current_ipv6, $ipv6) !== 0) {
+if (!empty($ipv6) && (empty($current_ipv6) || strcmp($current_ipv6, $ipv6) !== 0)) {
     // update ip records
     updateIpv6Records($config, $db, $ipv6);
     // send email with new ip information
