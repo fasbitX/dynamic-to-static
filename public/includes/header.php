@@ -39,6 +39,9 @@
             <li class="nav-item<?php echo $page_title === 'IPs Log' ? ' active':'' ?>">
                 <a class="nav-link" href="<?php \App\Util\Helper::url('ips.php') ?>">IPs Log</a>
             </li>
+            <li class="nav-item<?php echo $page_title === 'Speed Test' ? ' active':'' ?>">
+                <a class="nav-link" href="<?php \App\Util\Helper::url('speedtest.php') ?>">Speed Test</a>
+            </li>
         </ul>
     </div>
 </nav>

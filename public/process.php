@@ -45,6 +45,10 @@ if (!empty($_POST)) {
                 'notification_to_email' => Helper::getPostValue('notification_to_email'),
                 'notification_to_name' => Helper::getPostValue('notification_to_name'),
                 'notification_port' => Helper::getPostValue('notification_port'),
+                'cron_speedtest' => Helper::getPostValue('cron_speedtest', 0),
+                'cron_frequency_speedtest' => Helper::getPostValue('cron_frequency_speedtest'),
+                'cron_ipchecker' => Helper::getPostValue('cron_ipchecker', 0),
+                'cron_frequency_ipchecker' => Helper::getPostValue('cron_frequency_ipchecker'),
             ];
 
             foreach ($config_settings as $config_key => $config_setting) {

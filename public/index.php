@@ -68,6 +68,75 @@ include_once BASE_PATH . '/includes/header.php';
                             </div>
                         </div>
 
+                        <!-- Cron Settings -->
+                        <div class="form-group row">
+                            <div class="col-sm-12"><br><br></div>
+                            <div class="col-sm-12">
+                                <h6 class="text-uppercase">CRON Settings</h6>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cron_ipchecker" class="col-sm-3 col-form-label">IP Checker Cron</label>
+                            <div class="col-sm-2">
+                                <?php
+                                $checked = !empty($config->cron_ipchecker) ? ' checked="checked"' : '';
+                                ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1"
+                                           id="cron_ipchecker"
+                                           name="cron_ipchecker" <?php echo $checked; ?>>
+                                    <label class="form-check-label" for="cron_ipchecker">
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="cron_frequency_ipchecker"
+                                        name="cron_frequency_ipchecker" class="form-control">
+                                    <?php
+                                    $options = ['Every Minute' => 0, 'Every 5 Minutes' => 5, 'Every 15 Mins' => 15, 'Every 30 Mins' => 30, 'Every 45 Mins' => 45, 'Every 1 Hour' => 60];
+                                    foreach ($options as $option_key => $option_value):
+                                        $selected = !empty($config->cron_frequency_ipchecker) && $config->cron_frequency_ipchecker == $option_value ? ' selected="selected"' : '';
+                                        ?>
+                                        <option value="<?php echo $option_value; ?>" <?php echo $selected; ?>><?php echo $option_key; ?></option>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cron_speedtest" class="col-sm-3 col-form-label">Monitor Speed Test</label>
+                            <div class="col-sm-2">
+                                <?php
+                                $checked = !empty($config->cron_speedtest) ? ' checked="checked"' : '';
+                                ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1"
+                                           id="cron_speedtest"
+                                           name="cron_speedtest" <?php echo $checked; ?>>
+                                    <label class="form-check-label" for="cron_speedtest">
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="cron_frequency_speedtest"
+                                        name="cron_frequency_speedtest" class="form-control">
+                                    <?php
+                                    $options = ['Every 15 Mins' => 15, 'Every 30 Mins' => 30, 'Every 45 Mins' => 45, 'Every 1 Hour' => 60];
+                                    foreach ($options as $option_key => $option_value):
+                                        $selected = !empty($config->cron_frequency_speedtest) && $config->cron_frequency_speedtest == $option_value ? ' selected="selected"' : '';
+                                        ?>
+                                        <option value="<?php echo $option_value; ?>" <?php echo $selected; ?>><?php echo $option_key; ?></option>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Cloudflare Settings -->
                         <div class="form-group row">
                             <div class="col-sm-12"><br><br></div>

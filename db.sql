@@ -31,7 +31,11 @@ INSERT INTO `configurations` (`config_id`, `config_key`, `config_value`, `status
 (11, 'notification_from_name',	'Cron Mailer',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (12, 'notification_to_email',	'receiver@example.com',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (13, 'notification_to_name',	'Receiver',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
-(14, 'notification_port',	'587',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30');
+(14, 'notification_port',	'587',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(15, 'cron_ipchecker',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(16, 'cron_frequency_ipchecker',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(15, 'cron_speedtest',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(16, 'cron_frequency_speedtest',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30');
 
 DROP TABLE IF EXISTS `dns_records`;
 CREATE TABLE `dns_records` (

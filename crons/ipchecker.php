@@ -1,12 +1,12 @@
 <?php
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 // set base path
 define('BASE_PATH', dirname(__FILE__));
 
 // load app config
-if (!is_file(BASE_PATH . '/public/config.php')) die('No configuration file found. Please read documentation.');
-$app_config = include_once BASE_PATH . '/public/config.php';
+if (!is_file(BASE_PATH . '/../public/config.php')) die('No configuration file found. Please read documentation.');
+$app_config = include_once BASE_PATH . '/../public/config.php';
 
 $config_db = [
     'driver' => 'mysql',
@@ -34,7 +34,7 @@ $current_ipv4 = $db->getCurrentIp('IPv4');
 $current_ipv6 = $db->getCurrentIp('IPv6');
 
 // Insert IPv4
-if (empty($current_ipv4) || strcmp($current_ipv4, $ipv4) !== 0) {
+if ((!empty($ipv4) && empty($current_ipv4)) || strcmp($current_ipv4, $ipv4) !== 0) {
     // update ip records
     updateIpv4Records($config, $db, $ipv4);
     // send email with new ip information
@@ -49,7 +49,7 @@ if ((!empty($ipv6) && empty($current_ipv6)) || strcmp($current_ipv6, $ipv6) !== 
     sendEmail($config, $current_ipv6, $ipv6);
 }
 
-function updateIpv4Records(object $config,  App\Models\Db $db, $ipv4)
+function updateIpv4Records(object $config, App\Models\Db $db, $ipv4)
 {
     // change any other ip status to 0
     $db->disableIp('IPv4');
@@ -87,7 +87,7 @@ function updateIpv4Records(object $config,  App\Models\Db $db, $ipv4)
     }
 }
 
-function updateIpv6Records(object $config,  App\Models\Db $db, $ipv6)
+function updateIpv6Records(object $config, App\Models\Db $db, $ipv6)
 {
     // change any other ip status to 0
     $db->disableIp('IPv6');

@@ -41,9 +41,9 @@ class Helper
         ];
     }
 
-    public static function getPostValue($field_name)
+    public static function getPostValue($field_name, $default_value = '')
     {
-        return isset($_POST[$field_name]) ? trim($_POST[$field_name]) : '';
+        return isset($_POST[$field_name]) ? trim($_POST[$field_name]) : $default_value;
     }
 
     public static function getUrlWithPort($site_url, $site_port)
