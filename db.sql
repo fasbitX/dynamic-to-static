@@ -59,4 +59,16 @@ CREATE TABLE `ips` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `speed_tests`;
+CREATE TABLE `speed_tests` (
+  `speed_test_id` int(11) NOT NULL AUTO_INCREMENT,
+  `download` float NOT NULL,
+  `upload` float NOT NULL,
+  `latency` float NOT NULL,
+  `response_data` text NOT NULL,
+  `date_created` datetime NOT NULL,
+  PRIMARY KEY (`speed_test_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- 2020-02-05 23:27:58
