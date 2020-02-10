@@ -116,7 +116,7 @@ class Db
             'type' => $type,
         ])->get();
         $ip = '';
-        if($ips->count()) $ip = $ips->first()->ip;
+        if ($ips->count()) $ip = $ips->first()->ip;
         return $ip;
     }
 
@@ -146,5 +146,27 @@ class Db
     {
         $ips = $this->db::table('ips')->orderBy('id', 'desc')->get()->toArray();
         return $ips;
+    }
+
+    public function addSpeedTest($download, $upload, $latency, $response_data)
+    {
+        $success = $this->db::table('speed_tests')
+            ->insert([
+                'download' => $download,
+                'upload' => $upload,
+                'latency' => $latency,
+                'response_data' => $response_data,
+                'date_created' => date('Y-m-d H:i:s'),
+            ]);
+        return $success;
+    }
+
+    public function getSpeedTests($limit = 30)
+    {
+        $speed_tests = $this->db::table('speed_tests')
+            ->select(['download', 'upload', 'latency', 'date_created'])
+            ->limit($limit)
+            ->get()->toArray();
+        return $speed_tests;
     }
 }

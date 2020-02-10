@@ -45,8 +45,8 @@ if(!empty($config->cron_ipchecker)) {
 }
 // speed test
 if(!empty($config->cron_speedtest)) {
-    if(array_key_exists($config->cron_frequency_ipchecker, $cron_times)) {
-        $cron = Cron\CronExpression::factory($cron_times[$config->cron_frequency_ipchecker]);
+    if(array_key_exists($config->cron_frequency_speedtest, $cron_times)) {
+        $cron = Cron\CronExpression::factory($cron_times[$config->cron_frequency_speedtest]);
         if($cron->isDue()) {
             chdir(BASE_PATH);
             exec('/usr/bin/php ./crons/speedtest.php');

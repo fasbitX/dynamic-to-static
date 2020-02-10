@@ -39,14 +39,24 @@ Dependencies
     composer install
 ```
 
+- Install Speed Test utility by running following commands
+
+```
+wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+chmod +x speedtest-cli
+sudo mv speedtest-cli /usr/local/bin/ 
+```
+
 ## GUI Access
 
 Access the Administrative GUI at  https://127.0.0.1/StaticMaker/public
 
-## COMMAND EXAMPLE
+## CRON CONFIGURATION
+
+Set this cron job on your server. CRON frequency can be configured in the GUI.
 
 ```
-/usr/bin/php /path/to/your/package/script.php
+* * * * * /usr/bin/php /path/to/your/package/cron.php
 ```
 
 info@fasbit.com
