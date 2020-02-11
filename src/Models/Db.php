@@ -161,12 +161,16 @@ class Db
         return $success;
     }
 
-    public function getSpeedTests($limit = 30)
+    public function getSpeedTests($limit = 30, $offset = 0, $count = false)
     {
         $speed_tests = $this->db::table('speed_tests')
-            ->select(['download', 'upload', 'latency', 'date_created'])
-            ->limit($limit)
-            ->get()->toArray();
+            ->orderBy('speed_test_id', 'desc');
+
+        if (!empty($limit)) $speed_tests->limit($limit);
+        if (!empty($offset)) $speed_tests->offset($offset);
+        if($count) return $speed_tests->count();
+
+        $speed_tests = $speed_tests->get()->toArray();
         return $speed_tests;
     }
 }

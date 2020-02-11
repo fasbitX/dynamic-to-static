@@ -24,34 +24,36 @@ include_once BASE_PATH . '/includes/header.php';
                                 <hr>
                             </div>
                             <div id="ip-container" class="col-md-12">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">IP</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    if (!empty($ips)) {
-                                        foreach ($ips as $ip):
-                                            ?>
-                                            <tr>
-                                                <th scope="row"><?php echo $ip->id ?></th>
-                                                <td><?php echo $ip->ip ?></td>
-                                                <td><?php echo $ip->type ?></td>
-                                                <td><?php echo $ip->status == '1' ? 'Active' : 'InActive'; ?></td>
-                                            </tr>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">IP</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
                                         <?php
-                                        endforeach;
-                                    } else {
-                                        echo 'No Records.';
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
+                                        if (!empty($ips)) {
+                                            foreach ($ips as $ip):
+                                                ?>
+                                                <tr>
+                                                    <th scope="row"><?php echo $ip->id ?></th>
+                                                    <td><?php echo $ip->ip ?></td>
+                                                    <td><?php echo $ip->type ?></td>
+                                                    <td><?php echo $ip->status == '1' ? 'Active' : 'InActive'; ?></td>
+                                                </tr>
+                                            <?php
+                                            endforeach;
+                                        } else {
+                                            echo 'No Records.';
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </form>
