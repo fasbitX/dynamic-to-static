@@ -56,4 +56,40 @@ class Helper
         $site_url = $protocol . $host . $path;
         return $site_url;
     }
+
+    public static function getTimezoneList()
+    {
+        static $timezones = null;
+
+        if ($timezones === null) {
+            $timezones = [];
+            $offsets = [];
+            $now = new \DateTime('now', new \DateTimeZone('UTC'));
+
+            foreach (\DateTimeZone::listIdentifiers() as $timezone) {
+                $now->setTimezone(new \DateTimeZone($timezone));
+                $offsets[] = $offset = $now->getOffset();
+                $timezones[$timezone] = '(' . self::formatGmtOffset($offset) . ') ' . self::formatTimezoneName($timezone);
+            }
+
+            array_multisort($offsets, $timezones);
+        }
+
+        return $timezones;
+    }
+
+    public static function formatGmtOffset($offset)
+    {
+        $hours = intval($offset / 3600);
+        $minutes = abs(intval($offset % 3600 / 60));
+        return 'GMT' . ($offset ? sprintf('%+03d:%02d', $hours, $minutes) : '+00:00');
+    }
+
+    public static function formatTimezoneName($name)
+    {
+        $name = str_replace('/', ', ', $name);
+        $name = str_replace('_', ' ', $name);
+        $name = str_replace('St ', 'St. ', $name);
+        return $name;
+    }
 }

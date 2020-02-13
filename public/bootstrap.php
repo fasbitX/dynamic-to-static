@@ -34,3 +34,6 @@ try {
 }
 $config = $db->getConfig();
 define('SITE_URL', \App\Util\Helper::getUrlWithPort($config->site_url, $config->site_port));
+// set default timezone
+$timezone = !empty($config->default_timezone) ? trim($config->default_timezone) : 'UTC';
+date_default_timezone_set($timezone);

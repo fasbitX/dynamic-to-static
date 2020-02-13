@@ -67,6 +67,26 @@ include_once BASE_PATH . '/includes/header.php';
                                        value="<?php echo $config->site_port ?>">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="site_port" class="col-sm-3 col-form-label">Default Timezone</label>
+                            <div class="col-sm-9">
+                                <?php
+                                $timezones = \App\Util\Helper::getTimezoneList();
+                                $selected_timezone = !empty($config->default_timezone) ? trim($config->default_timezone) : date_default_timezone_get();
+                                ?>
+                                <select id="default_timezone"
+                                        name="default_timezone" class="form-control">
+                                    <?php
+                                    foreach ($timezones as $option_key => $option_value):
+                                        $selected = $option_key == $selected_timezone ? ' selected' : '';
+                                        ?>
+                                        <option value="<?php echo $option_key; ?>" <?php echo $selected; ?>><?php echo $option_value; ?></option>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
                         <!-- Cron Settings -->
                         <div class="form-group row">

@@ -30,6 +30,9 @@ Dependencies
 ## INSTALLATION
 
 - Create database by importing db.sql file into your MySQL.
+```
+mysql -u YOUR_USERNAME -p ipchanger < db.sql
+```
 
 - Copy public/config-sample.php to public/config.php and update db credentials.
 

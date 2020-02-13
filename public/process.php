@@ -49,6 +49,7 @@ if (!empty($_POST)) {
                 'cron_frequency_speedtest' => Helper::getPostValue('cron_frequency_speedtest'),
                 'cron_ipchecker' => Helper::getPostValue('cron_ipchecker', 0),
                 'cron_frequency_ipchecker' => Helper::getPostValue('cron_frequency_ipchecker'),
+                'default_timezone' => Helper::getPostValue('default_timezone'),
             ];
 
             foreach ($config_settings as $config_key => $config_setting) {

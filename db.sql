@@ -5,6 +5,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+CREATE DATABASE IF NOT EXISTS `ipchanger` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `ipchanger`;
+
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE `configurations` (
   `config_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,7 +22,7 @@ CREATE TABLE `configurations` (
 
 INSERT INTO `configurations` (`config_id`, `config_key`, `config_value`, `status`, `date_created`, `date_updated`) VALUES
 (1,	'site_name',	'Static Maker',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
-(2,	'site_url',	'http://localhost/StaticMaker/public/',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(2,	'site_url',	'http://127.0.0.1/StaticMaker/public/',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (3,	'site_port',	'80',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (4,	'cloudflare_email',	'email@example.com',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (5,	'cloudflare_api_key',	'xxxxx',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
@@ -35,7 +38,8 @@ INSERT INTO `configurations` (`config_id`, `config_key`, `config_value`, `status
 (15, 'cron_ipchecker',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (16, 'cron_frequency_ipchecker',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (17, 'cron_speedtest',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
-(18, 'cron_frequency_speedtest',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30');
+(18, 'cron_frequency_speedtest',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(19, 'default_timezone',	'UTC',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30');
 
 DROP TABLE IF EXISTS `dns_records`;
 CREATE TABLE `dns_records` (

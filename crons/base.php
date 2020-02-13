@@ -25,3 +25,7 @@ try {
     die('DB connection error.');
 }
 $config = $db->getConfig();
+// set default timezone
+$timezone = !empty($config->default_timezone) ? trim($config->default_timezone) : 'UTC';
+date_default_timezone_set($timezone);
+
