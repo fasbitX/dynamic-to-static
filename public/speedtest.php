@@ -25,7 +25,13 @@ include_once BASE_PATH . '/includes/header.php';
                     <?php include_once BASE_PATH . '/includes/alert.php' ?>
                     <div class="row">
                         <div class="col-md-12">
-                            <canvas id="chart-speed-test" width="400" height="250"></canvas>
+                            <canvas id="chart-speed-test-download" width="400" height="150"></canvas><br><br>
+                        </div>
+                        <div class="col-md-12">
+                            <canvas id="chart-speed-test-upload" width="400" height="150"></canvas><br><br>
+                        </div>
+                        <div class="col-md-12">
+                            <canvas id="chart-speed-test-latency" width="400" height="150"></canvas>
                         </div>
                     </div>
                 </div>
@@ -114,9 +120,59 @@ function footer_content()
             grey: 'rgb(201, 203, 207)'
         };
 
-        createChart('chart-speed-test');
+        var download = {
+            label: 'Download (Mbps)',
+            borderColor: window.chartColors.green,
+            backgroundColor: window.chartColors.green,
+            data: [<?php
+                $i = 0;
+                foreach ($speed_tests as $speed_test) {
+                    if ($i > 0) echo ",";
+                    echo round($speed_test->download / 1024 / 1024, 2);
+                    $i++;
+                }
+                ?>],
+            borderWidth: 1,
+            fill: false,
+        };
 
-        function createChart(elementId) {
+        var upload = {
+            label: 'Upload (Mbps)',
+            borderColor: window.chartColors.orange,
+            backgroundColor: window.chartColors.orange,
+            data: [<?php
+                $i = 0;
+                foreach ($speed_tests as $speed_test) {
+                    if ($i > 0) echo ",";
+                    echo round($speed_test->upload / 1024 / 1024, 2);
+                    $i++;
+                }
+                ?>],
+            borderWidth: 1,
+            fill: false,
+        };
+
+        var latency = {
+            label: 'Latency (ms)',
+            borderColor: window.chartColors.blue,
+            backgroundColor: window.chartColors.blue,
+            data: [<?php
+                $i = 0;
+                foreach ($speed_tests as $speed_test) {
+                    if ($i > 0) echo ",";
+                    echo round($speed_test->latency, 2);
+                    $i++;
+                }
+                ?>],
+            borderWidth: 1,
+            fill: false,
+        };
+
+        createChart('chart-speed-test-download', download);
+        createChart('chart-speed-test-upload', upload);
+        createChart('chart-speed-test-latency', latency);
+
+        function createChart(elementId, dataset) {
             var ctx = document.getElementById(elementId);
             var myChart = new Chart(ctx, {
                 type: 'line',
@@ -125,54 +181,11 @@ function footer_content()
                         $i = 0;
                         foreach ($speed_tests as $speed_test) {
                             if ($i > 0) echo ",";
-                            echo "'" . date('H:i d/m', strtotime($speed_test->date_created)) . "'";
+                            echo "'" . date('H:i m/d', strtotime($speed_test->date_created)) . "'";
                             $i++;
                         }
                         ?>],
-                    datasets: [
-                        {
-                            label: 'Upload (Mbps)',
-                            borderColor: window.chartColors.orange,
-                            backgroundColor: window.chartColors.orange,
-                            data: [<?php
-                                $i = 0;
-                                foreach ($speed_tests as $speed_test) {
-                                    if ($i > 0) echo ",";
-                                    echo round($speed_test->upload / 1024 / 1024, 2);
-                                    $i++;
-                                }
-                                ?>],
-                            borderWidth: 1,
-                        },
-                        {
-                            label: 'Latency (ms)',
-                            borderColor: window.chartColors.blue,
-                            backgroundColor: window.chartColors.blue,
-                            data: [<?php
-                                $i = 0;
-                                foreach ($speed_tests as $speed_test) {
-                                    if ($i > 0) echo ",";
-                                    echo round($speed_test->latency, 2);
-                                    $i++;
-                                }
-                                ?>],
-                            borderWidth: 1,
-                        },
-                        {
-                            label: 'Download (Mbps)',
-                            borderColor: window.chartColors.green,
-                            backgroundColor: window.chartColors.green,
-                            data: [<?php
-                                $i = 0;
-                                foreach ($speed_tests as $speed_test) {
-                                    if ($i > 0) echo ",";
-                                    echo round($speed_test->download / 1024 / 1024, 2);
-                                    $i++;
-                                }
-                                ?>],
-                            borderWidth: 1,
-                        }
-                    ]
+                    datasets: [dataset]
                 },
                 options: {
                     responsive: true,
