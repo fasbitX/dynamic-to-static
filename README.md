@@ -12,20 +12,13 @@ Install the StaticMaker script on the computer that will be hosting the website.
 If your local ISP changes your IP address, the script will detect the change and send a code to Cloudlfare to change the destination IP address from the old IP address to the new one.
 The script runs as a daemon in the background and needs very little if any adjusting.
 
-    • You need 1 instance of StaticMaker per Cloudflare account.
-    • Manage multiple Domains & Sub-Domains from the same Cloudflare account
+    You need 1 instance of StaticMaker per Cloudflare account.
+    Manage multiple Domains & Sub-Domains from the same Cloudflare account
 
 Step 3 
 Install Mysql and a web server like Apache2 or Nginx.  
 
-Proxy Services
-    • If you know of other free proxy services with API access, shoot us an email and we may add them to the option list.
-
-Current Program built for Ubuntu 18.04, with easy to use front end web GUI.
-
-Windows installer: coming soon.
-
-Dependencies
+Current Program built for Ubuntu 18.04, with easy to use front end web GUI
 
 ## INSTALLATION
 
