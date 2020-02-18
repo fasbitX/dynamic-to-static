@@ -98,7 +98,7 @@ include_once BASE_PATH . '/includes/header.php';
                         </div>
                         <div class="form-group row">
                             <label for="cron_ipchecker" class="col-sm-3 col-form-label">IP Checker Cron</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <?php
                                 $checked = !empty($config->cron_ipchecker) ? ' checked="checked"' : '';
                                 ?>
@@ -128,7 +128,7 @@ include_once BASE_PATH . '/includes/header.php';
                         </div>
                         <div class="form-group row">
                             <label for="cron_speedtest" class="col-sm-3 col-form-label">Monitor Speed Test</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <?php
                                 $checked = !empty($config->cron_speedtest) ? ' checked="checked"' : '';
                                 ?>
@@ -154,6 +154,26 @@ include_once BASE_PATH . '/includes/header.php';
                                     endforeach;
                                     ?>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="speedtest_server_enabled" class="col-sm-3 col-form-label">Speed Test Server</label>
+                            <div class="col-sm-3">
+                                <?php
+                                $checked = !empty($config->speedtest_server_enabled) ? ' checked="checked"' : '';
+                                ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1"
+                                           id="speedtest_server_enabled"
+                                           name="speedtest_server_enabled" <?php echo $checked; ?>>
+                                    <label class="form-check-label" for="speedtest_server_enabled">
+                                        Custom Server
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="speedtest_server" id="speedtest_server"
+                                       value="<?php echo $config->speedtest_server ?>" placeholder="Server ID e.g. 24383">
                             </div>
                         </div>
 

@@ -39,7 +39,9 @@ INSERT INTO `configurations` (`config_id`, `config_key`, `config_value`, `status
 (16, 'cron_frequency_ipchecker',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (17, 'cron_speedtest',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
 (18, 'cron_frequency_speedtest',	'15',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
-(19, 'default_timezone',	'UTC',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30');
+(19, 'default_timezone',	'UTC',	1,	'2020-01-27 22:37:45',	'2020-02-05 23:11:30'),
+(20, 'speedtest_server_enabled',	'0',	1,	'2020-01-27 22:37:45',	'2020-02-18 22:11:30'),
+(21, 'speedtest_server',	'',	1,	'2020-01-27 22:37:45',	'2020-02-18 22:11:30');
 
 DROP TABLE IF EXISTS `dns_records`;
 CREATE TABLE `dns_records` (

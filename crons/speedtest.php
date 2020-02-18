@@ -3,7 +3,10 @@
 require dirname(__FILE__) . '/base.php';
 
 chdir(BASE_PATH);
-exec('/usr/local/bin/speedtest-cli --json', $result);
+
+$custom_server = !empty($config->speedtest_server_enabled) && !empty($config->speedtest_server) ? "--server {$config->speedtest_server}" : '';
+
+exec("/usr/local/bin/speedtest-cli {$custom_server} --json", $result);
 
 if (!empty($result[0])) {
     $response_data = $result[0];
