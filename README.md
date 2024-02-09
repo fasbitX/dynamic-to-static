@@ -22,12 +22,12 @@ Current Program built for Ubuntu 18.04, with easy to use front end web GUI
 
 ## INSTALLATION
 
-Copy the StaticMaker files into you web server flder
+Copy the StaticMaker files into your web server folder
     $ git clone https://github.com/fasbitX/StaticMaker /var/www/html
 
 - Create database by importing db.sql file into your MySQL.
 ```
-mysql -u YOUR_USERNAME -p  < db.sql
+    $ mysql -u YOUR_USERNAME -p  < db.sql
 ```
 Located in /var/www/html/StaticMaker/public
 - Copy public/config-sample.php to public/config.php and update db credentials.
