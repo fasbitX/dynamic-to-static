@@ -32,6 +32,11 @@ mysql -u YOUR_USERNAME -p  < db.sql
 ```
 Located in /var/www/html/StaticMaker/public
 - Copy public/config-sample.php to public/config.php and update db credentials.
+```
+cd
+cd /var/www/html/StaticMaker/public
+cp config-sample.php config.php
+```
 
 - Run following command to install required packages.
 
