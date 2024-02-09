@@ -24,7 +24,7 @@ Current Program built for Ubuntu 18.04, with easy to use front end web GUI
 
 Copy the StaticMaker files into your web server folder
 ```
-    $ git clone https://github.com/fasbitX/StaticMaker /var/www/html
+git clone https://github.com/fasbitX/StaticMaker /var/www/html
 ```
 
 - Create database by importing db.sql file into your MySQL.
