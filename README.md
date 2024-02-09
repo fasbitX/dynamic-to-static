@@ -22,25 +22,30 @@ Current Program built for Ubuntu 18.04, with easy to use front end web GUI
 
 ## INSTALLATION
 
+Copy the StaticMaker files into you web server flder
+    $ git clone https://github.com/fasbitX/StaticMaker /var/www/html
+
 - Create database by importing db.sql file into your MySQL.
 ```
-mysql -u YOUR_USERNAME -p ipchanger < db.sql
+mysql -u YOUR_USERNAME -p  < db.sql
 ```
-
+Located in /var/www/html/StaticMaker/public
 - Copy public/config-sample.php to public/config.php and update db credentials.
 
 - Run following command to install required packages.
 
 ```
-    composer install
+    $ apt-get install composer
+    $ composer update
+    $ composer install
 ```
 
 - Install Speed Test utility by running following commands
 
 ```
-wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
-chmod +x speedtest-cli
-sudo mv speedtest-cli /usr/local/bin/ 
+    $ wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+    $ chmod +x speedtest-cli
+    $ sudo mv speedtest-cli /usr/local/bin/ 
 ```
 
 ## GUI Access
