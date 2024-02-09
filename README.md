@@ -22,7 +22,7 @@ Current Program built for Ubuntu 18.04, with easy to use front end web GUI
 
 ## INSTALLATION
 
-Copy the StaticMaker files into your web server folder
+Copy the StaticMaker files into your web server root
 ```
 git clone https://github.com/fasbitX/StaticMaker /var/www/html
 ```
