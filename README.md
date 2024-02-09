@@ -27,7 +27,8 @@ Copy the StaticMaker files into your web server folder
 
 - Create database by importing db.sql file into your MySQL.
 ```
-    $ mysql -u YOUR_USERNAME -p  < db.sql
+mysql -u YOUR_USERNAME -p  < db.sql
+
 ```
 Located in /var/www/html/StaticMaker/public
 - Copy public/config-sample.php to public/config.php and update db credentials.
@@ -35,17 +36,17 @@ Located in /var/www/html/StaticMaker/public
 - Run following command to install required packages.
 
 ```
-    $ apt-get install composer
-    $ composer update
-    $ composer install
+apt-get install composer
+composer update
+composer install
 ```
 
 - Install Speed Test utility by running following commands
 
 ```
-    $ wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
-    $ chmod +x speedtest-cli
-    $ sudo mv speedtest-cli /usr/local/bin/ 
+wget -O speedtest-cli https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+chmod +x speedtest-cli
+sudo mv speedtest-cli /usr/local/bin/ 
 ```
 
 ## GUI Access
